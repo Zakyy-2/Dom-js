@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+    <title>Perpustakaan Mini - DOM</title>
+      <style>
+          /* Style dasar agar tampilan rapi */
+              body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+                 .kartu { background: white; padding: 15px; margin: 10px 0; border-radius: 8px; border: 1px solid #ddd; }
+                    .dipinjam { background-color: #ffdddd!important; border: 2px solid red; }
+                        button:disabled { background: grey; color: white; cursor: not-allowed; }
+                          </style>
+                          </head>
+                          <body>
+
+                            <!-- JUDUL UTAMA: akan diambil pakai querySelector -->
+                              <h1 id="judul-perpus">Perpustakaan Mini</h1>
+                                <p id="info-stok">Total Buku: 0</p>
+
+                                  <!-- CONTAINER: akan diisi daftar buku pakai innerHTML -->
+                                    <div id="daftar-buku"></div>
+
+                                      <!-- CONTOH ATRIBUT: gambar cover akan diganti src-nya via JS -->
+                                        <h3>Cover Buku Terpilih:</h3>
+                                          <img id="cover-buku" src="https://via.placeholder.com/120x150" alt="cover buku" width="120">
+
+                                            <!-- Hubungkan ke file JS -->
+                                              <script src="script.js"></script>
+                                              </body>
+                                              </html>
