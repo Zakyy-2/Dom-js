@@ -2,29 +2,107 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-    <title>Perpustakaan Mini - DOM</title>
-      <style>
-          /* Style dasar agar tampilan rapi */
-              body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
-                 .kartu { background: white; padding: 15px; margin: 10px 0; border-radius: 8px; border: 1px solid #ddd; }
-                    .dipinjam { background-color: #ffdddd!important; border: 2px solid red; }
-                        button:disabled { background: grey; color: white; cursor: not-allowed; }
-                          </style>
-                          </head>
-                          <body>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistem Perpustakaan Mini - DOM JS</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+    body {
+      background-color: #f4f6f8;
+      padding: 20px;
+      margin: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .card-form, .search-box {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    input {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      padding: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .kartu-buku {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      background: #fafafa;
+    }
+    .kartu-buku.dipinjam {
+      background-color: #ffe6e6;
+      border-color: #ff4d4d;
+    }
+    .btn-hapus {
+      background-color: #dc3545;
+      margin-left: 5px;
+    }
+    .btn-pinjam {
+      background-color: #28a745;
+    }
+    .info-box {
+      background: #e9ecef;
+      padding: 10px;
+      border-radius: 4px;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
 
-                            <!-- JUDUL UTAMA: akan diambil pakai querySelector -->
-                              <h1 id="judul-perpus">Perpustakaan Mini</h1>
-                                <p id="info-stok">Total Buku: 0</p>
+  <div class="container">
+    <!-- JUDUL UTAMA -->
+    <h1 id="judul-perpus">Perpustakaan Mini</h1>
+    
+    <div class="info-box">
+      <p id="info-stok">Total Buku: <span>0</span></p>
+      <!-- ATRIBUT & STYLE DEMO -->
+      <button id="btn-toggle-fitur">Matikan Fitur Tambah</button>
+    </div>
 
-                                  <!-- CONTAINER: akan diisi daftar buku pakai innerHTML -->
-                                    <div id="daftar-buku"></div>
+    <!-- FORM TAMBAH BUKU -->
+    <form id="form-buku" class="card-form">
+      <h3>Tambah Buku Baru</h3>
+      <input type="text" id="input-judul" placeholder="Judul Buku..." />
+      <input type="text" id="input-penulis" placeholder="Penulis Buku..." />
+      <button type="submit" id="btn-tambah">Tambah Buku</button>
+    </form>
 
-                                      <!-- CONTOH ATRIBUT: gambar cover akan diganti src-nya via JS -->
-                                        <h3>Cover Buku Terpilih:</h3>
-                                          <img id="cover-buku" src="https://via.placeholder.com/120x150" alt="cover buku" width="120">
+    <!-- SEARCH INPUT -->
+    <div class="search-box">
+      <input type="text" id="input-cari" placeholder="Cari judul buku..." />
+    </div>
 
-                                            <!-- Hubungkan ke file JS -->
-                                              <script src="script.js"></script>
-                                              </body>
-                                              </html>
+    <!-- DAFTAR BUKU (CONTAINER) -->
+    <h2>Daftar Buku</h2>
+    <div id="daftar-buku"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

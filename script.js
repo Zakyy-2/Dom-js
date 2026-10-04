@@ -1,90 +1,162 @@
-// DATA AWAL: Simulasi data buku dari database perpustakaan
-const dataBuku = [
+// ========================================================
+// 1. querySelector dan querySelectorAll
+// ========================================================
+const judulPerpus = document.querySelector("#judul-perpus");
+const infoStok = document.querySelector("#info-stok span");
+const formBuku = document.querySelector("#form-buku");
+const inputJudul = document.querySelector("#input-judul");
+const inputPenulis = document.querySelector("#input-penulis");
+const btnTambah = document.querySelector("#btn-tambah");
+const btnToggleFitur = document.querySelector("#btn-toggle-fitur");
+const inputCari = document.querySelector("#input-cari");
+const daftarBuku = document.querySelector("#daftar-buku");
+
+// Data Awal
+let dataBuku = [
   { id: 1, judul: "Laskar Pelangi", penulis: "Andrea Hirata", dipinjam: false },
-    { id: 2, judul: "Bumi", penulis: "Tere Liye", dipinjam: false },
-      { id: 3, judul: "Negeri 5 Menara", penulis: "A. Fuadi", dipinjam: true }
-      ];
+  { id: 2, judul: "Bumi", penulis: "Tere Liye", dipinjam: false }
+];
 
-      // =======================================================
-      // 1. querySelector dan querySelectorAll
-      // =======================================================
+// ========================================================
+// FUNGSI RENDER (Memuat/Memperbarui Tampilan)
+// ========================================================
+function renderBuku() {
+  // 2. innerHTML: Mengosongkan & mengisi container HTML
+  daftarBuku.innerHTML = "";
 
-      // querySelector: mengambil 1 elemen pertama berdasarkan selector CSS
-      const judulUtama = document.querySelector('#judul-perpus'); // ambil berdasarkan ID
-      const daftarBukuEl = document.querySelector('#daftar-buku'); // ambil container buku
-      const infoStokEl = document.querySelector('#info-stok'); // ambil info stok
-      const coverEl = document.querySelector('#cover-buku'); // ambil elemen gambar
+  dataBuku.forEach((buku) => {
+    // 4. Membuat Elemen Baru
+    const kartu = document.createElement("div");
+    kartu.className = `kartu-buku ${buku.dipinjam ? "dipinjam" : ""}`;
+    
+    // 3. Manipulasi Atribut Data
+    kartu.setAttribute("data-id", buku.id);
 
-      // =======================================================
-      // 2. innerHTML, textContent, innerText
-      // =======================================================
+    kartu.innerHTML = `
+      <div>
+        <strong>${buku.judul}</strong> - <em>${buku.penulis}</em>
+      </div>
+      <div>
+        <button class="btn-pinjam">${buku.dipinjam ? "Kembalikan" : "Pinjam"}</button>
+        <button class="btn-hapus">Hapus</button>
+      </div>
+    `;
 
-      // textContent: mengubah teks murni tanpa tag HTML (paling aman & cepat)
-      infoStokEl.textContent = `Total Buku: ${dataBuku.length}`;
+    // 4. Menambahkan Elemen ke DOM (appendChild)
+    daftarBuku.appendChild(kartu);
+  });
 
-      // innerHTML: membuat daftar buku lengkap dengan tag HTML dari data array
-      // Kita loop data dan buat template HTML per buku
-      let templateHTML = "";
-      dataBuku.forEach(buku => {
-        templateHTML += `
-            <div class="kartu buku" data-id="${buku.id}">
-                  <h3 class="judul-buku">${buku.judul}</h3>
-                        <p>Penulis: ${buku.penulis}</p>
-                              <button class="btn-pinjam">Pinjam</button>
-                                  </div>
-                                    `;
-                                    });
-                                    // Masukkan template ke dalam container
-                                    daftarBukuEl.innerHTML = templateHTML;
+  // 2. textContent: Memperbarui counter angka saja
+  infoStok.textContent = dataBuku.length;
+}
 
-                                    // querySelectorAll: mengambil SEMUA elemen yang cocok (hasilnya NodeList)
-                                    const semuaKartuBuku = document.querySelectorAll('.buku'); // ambil semua kartu buku
-                                    const semuaTombol = document.querySelectorAll('.btn-pinjam'); // ambil semua tombol pinjam
+// ========================================================
+// 3. Manipulasi Atribut dan Style
+// ========================================================
+btnToggleFitur.addEventListener("click", () => {
+  const isDisabled = btnTambah.hasAttribute("disabled");
+  
+  if (isDisabled) {
+    btnTambah.removeAttribute("disabled");
+    btnTambah.style.backgroundColor = "#007bff";
+    btnToggleFitur.textContent = "Matikan Fitur Tambah";
+  } else {
+    btnTambah.setAttribute("disabled", "true");
+    btnTambah.style.backgroundColor = "#6c757d";
+    btnToggleFitur.textContent = "Aktifkan Fitur Tambah";
+  }
+});
 
-                                    // innerText: membaca teks yang terlihat oleh user
-                                    console.log("Judul terlihat:", judulUtama.innerText);
+// ========================================================
+// 5. Event Listener (submit) + 8. Ambil Data Dan Validasi
+// ========================================================
+formBuku.addEventListener("submit", (e) => {
+  e.preventDefault(); // Mencegah reload halaman
 
-                                    // =======================================================
-                                    // 3. Manipulasi Atribut dan Style
-                                    // =======================================================
+  // 8. Ambil Data dari Input
+  const judul = inputJudul.value.trim();
+  const penulis = inputPenulis.value.trim();
 
-                                    // Loop setiap tombol untuk kasih fungsi pinjam
-                                    semuaTombol.forEach((tombol, index) => {
-                                      // Ambil data buku yang sesuai dengan urutan tombol
-                                        const buku = dataBuku[index];
-                                          const kartu = semuaKartuBuku[index];
+  // 8. Validasi Data
+  if (judul === "" || penulis === "") {
+    alert("Judul dan Penulis tidak boleh kosong!");
+    return;
+  }
 
-                                            // Jika buku sudah dipinjam dari awal (data)
-                                              if (buku.dipinjam) {
-                                                  // MANIPULASI ATRIBUT: menonaktifkan tombol
-                                                      tombol.setAttribute('disabled', true); // tambah atribut disabled
-                                                          // MANIPULASI TEKS: ubah tulisan tombol
-                                                              tombol.textContent = "Sudah Dipinjam";
-                                                                  // MANIPULASI STYLE via classList (cara terbaik)
-                                                                      kartu.classList.add('dipinjam'); // tambah class CSS 'dipinjam'
-                                                                        }
+  if (judul.length < 3) {
+    alert("Judul buku minimal harus 3 karakter!");
+    return;
+  }
 
-                                                                          // Tambahkan event klik untuk tiap tombol
-                                                                            tombol.addEventListener('click', () => {
-                                                                                // MANIPULASI ATRIBUT pada gambar: ganti src cover
-                                                                                    // getAttribute: membaca nilai atribut saat ini
-                                                                                        console.log("Src lama:", coverEl.getAttribute('src'));
-                                                                                            // setAttribute: mengubah nilai atribut src
-                                                                                                coverEl.setAttribute('src', `https://via.placeholder.com/120x150?text=${buku.judul}`);
-                                                                                                    // setAttribute alt untuk aksesibilitas
-                                                                                                        coverEl.setAttribute('alt', `Cover ${buku.judul}`);
+  // Tambah Data
+  const bukuBaru = {
+    id: Date.now(),
+    judul: judul,
+    penulis: penulis,
+    dipinjam: false
+  };
 
-                                                                                                            // MANIPULASI STYLE LANGSUNG: ubah warna kartu yang diklik
-                                                                                                                kartu.style.backgroundColor = "#ffdddd"; // ubah background jadi merah muda
-                                                                                                                    kartu.style.border = "2px solid red"; // tambah border merah
-                                                                                                                        kartu.style.transform = "scale(0.98)"; // efek sedikit mengecil
+  dataBuku.push(bukuBaru);
+  renderBuku();
 
-                                                                                                                            // MANIPULASI ATRIBUT: nonaktifkan tombol setelah diklik
-                                                                                                                                tombol.setAttribute('disabled', true);
-                                                                                                                                    tombol.textContent = "Sudah Dipinjam";
+  // Reset form
+  inputJudul.value = "";
+  inputPenulis.value = "";
+});
 
-                                                                                                                                        // Update status stok pakai textContent
-                                                                                                                                            infoStokEl.textContent = `Buku "${buku.judul}" sedang dipinjam!`;
-                                                                                                                                              });
-                                                                                                                                              });
-                                                                                                                                              
+// ========================================================
+// 5. Event Listener (input) + 1. querySelectorAll
+// ========================================================
+inputCari.addEventListener("input", (e) => {
+  const kataKunci = e.target.value.toLowerCase();
+  
+  // 1. querySelectorAll: Mengambil semua kartu yang sudah ada di DOM
+  const semuaKartu = document.querySelectorAll(".kartu-buku");
+
+  semuaKartu.forEach((kartu) => {
+    // 2. innerText / textContent: Membaca teks di dalam kartu
+    const teksBuku = kartu.innerText.toLowerCase();
+    
+    // 3. Manipulasi Style (Display)
+    if (teksBuku.includes(kataKunci)) {
+      kartu.style.display = "flex";
+    } else {
+      kartu.style.display = "none";
+    }
+  });
+});
+
+// ========================================================
+// 7. Event Delegation + 6. Event Bubbling & stopPropagation + 9. DOM Traversal
+// ========================================================
+daftarBuku.addEventListener("click", (e) => {
+  // 9. DOM Traversal (Parent): Mencari elemen induk .kartu-buku terdekat
+  const kartu = e.target.closest(".kartu-buku");
+  if (!kartu) return;
+
+  const idBuku = Number(kartu.getAttribute("data-id"));
+
+  // Jika tombol HAPUS diklik
+  if (e.target.classList.contains("btn-hapus")) {
+    // 6. stopPropagation: Mencegah event bubbling ke elemen di atasnya
+    e.stopPropagation();
+
+    // 4. Menghapus Elemen
+    dataBuku = dataBuku.filter((buku) => buku.id !== idBuku);
+    renderBuku();
+  }
+
+  // Jika tombol PINJAM diklik
+  if (e.target.classList.contains("btn-pinjam")) {
+    e.stopPropagation();
+
+    const buku = dataBuku.find((b) => b.id === idBuku);
+    if (buku) {
+      buku.dipinjam = !buku.dipinjam;
+      renderBuku();
+    }
+  }
+});
+
+// Inisialisasi Tampilan Pertama
+renderBuku();
